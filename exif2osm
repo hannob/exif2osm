@@ -1,0 +1,16 @@
+#!/bin/bash
+#
+# by Hanno Böck, https://hboeck.de/
+# free software, license CC0
+
+jhout="$(jhead $1)"
+
+lat="$(echo "$jhout"|grep "^GPS Latitude"|sed -e 's:.* N ::g')"
+lon="$(echo "$jhout"|grep "^GPS Longitude"|sed -e 's:.* E ::g')"
+lata=($lat)
+lona=($lon)
+
+latd=$(echo ${lata[0]/d/}+${lata[1]/m/}/60+${lata[2]/s/}/3600|bc -l)
+lond=$(echo ${lona[0]/d/}+${lona[1]/m/}/60+${lona[2]/s/}/3600|bc -l)
+
+echo "https://www.openstreetmap.org/?mlat=$latd&mlon=$lond#map=14/$latd/$lond"
